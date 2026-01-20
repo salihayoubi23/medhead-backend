@@ -7,8 +7,8 @@ public class RecommendationRequest {
     @NotBlank
     private String speciality;
 
-    @NotBlank
-    private String location;
+    private double lat;
+    private double lon;
 
     public RecommendationRequest() {
     }
@@ -21,11 +21,19 @@ public class RecommendationRequest {
         this.speciality = speciality;
     }
 
-    public String getLocation() {
-        return location;
+    public double getLat() {
+        return lat;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 }
