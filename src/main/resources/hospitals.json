@@ -1,0 +1,26 @@
+[
+  {
+    "id": "HOSP-001",
+    "name": "Hôpital Fred Brooks",
+    "availableBeds": 2,
+    "specialities": ["Cardiologie", "Immunologie"],
+    "lat": 51.5074,
+    "lon": -0.1278
+  },
+  {
+    "id": "HOSP-002",
+    "name": "Hôpital Julia Crusher",
+    "availableBeds": 0,
+    "specialities": ["Cardiologie"],
+    "lat": 51.5090,
+    "lon": -0.1180
+  },
+  {
+    "id": "HOSP-003",
+    "name": "Hôpital Beverly Bashir",
+    "availableBeds": 5,
+    "specialities": ["Immunologie", "Neuropathologie diagnostique"],
+    "lat": 51.5030,
+    "lon": -0.1400
+  }
+]
