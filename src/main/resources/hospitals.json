@@ -1,26 +1,13 @@
 [
-  {
-    "id": "HOSP-001",
-    "name": "Hôpital Fred Brooks",
-    "availableBeds": 2,
-    "specialities": ["Cardiologie", "Immunologie"],
-    "lat": 51.5074,
-    "lon": -0.1278
-  },
-  {
-    "id": "HOSP-002",
-    "name": "Hôpital Julia Crusher",
-    "availableBeds": 0,
-    "specialities": ["Cardiologie"],
-    "lat": 51.5090,
-    "lon": -0.1180
-  },
-  {
-    "id": "HOSP-003",
-    "name": "Hôpital Beverly Bashir",
-    "availableBeds": 5,
-    "specialities": ["Immunologie", "Neuropathologie diagnostique"],
-    "lat": 51.5030,
-    "lon": -0.1400
-  }
+  { "id":"HOSP-001","name":"Hôpital Fred Brooks","availableBeds":2,"specialities":["Cardiologie","Immunologie"],"lat":51.5074,"lon":-0.1278 },
+  { "id":"HOSP-002","name":"Hôpital Julia Crusher","availableBeds":0,"specialities":["Cardiologie"],"lat":51.5090,"lon":-0.1180 },
+  { "id":"HOSP-003","name":"Hôpital Beverly Bashir","availableBeds":5,"specialities":["Immunologie","Neuropathologie diagnostique"],"lat":51.5030,"lon":-0.1400 },
+
+  { "id":"HOSP-004","name":"Hôpital St Mary Emergency","availableBeds":3,"specialities":["Médecine d'urgence","Cardiologie"],"lat":51.5150,"lon":-0.1450 },
+  { "id":"HOSP-005","name":"Hôpital King's Trauma Unit","availableBeds":1,"specialities":["Médecine d'urgence","Neurologie"],"lat":51.5110,"lon":-0.0980 },
+  { "id":"HOSP-006","name":"Hôpital North London Care","availableBeds":6,"specialities":["Pédiatrie","Immunologie"],"lat":51.5400,"lon":-0.1050 },
+  { "id":"HOSP-007","name":"Hôpital West End Surgical","availableBeds":0,"specialities":["Chirurgie"],"lat":51.5125,"lon":-0.1550 },
+  { "id":"HOSP-008","name":"Hôpital East London Specialist","availableBeds":4,"specialities":["Cardiologie","Neuropathologie diagnostique"],"lat":51.5250,"lon":-0.0300 },
+  { "id":"HOSP-009","name":"Hôpital South Riverside","availableBeds":2,"specialities":["Médecine d'urgence","Pédiatrie"],"lat":51.4900,"lon":-0.1100 },
+  { "id":"HOSP-010","name":"Hôpital Central Clinic","availableBeds":7,"specialities":["Immunologie","Neurologie"],"lat":51.5200,"lon":-0.1200 }
 ]

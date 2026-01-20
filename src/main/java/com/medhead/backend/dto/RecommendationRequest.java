@@ -7,33 +7,14 @@ public class RecommendationRequest {
     @NotBlank
     private String speciality;
 
-    private double lat;
-    private double lon;
+    @NotBlank
+    private String originZone; // ex: LONDON_CENTRAL
 
-    public RecommendationRequest() {
-    }
+    public RecommendationRequest() {}
 
-    public String getSpeciality() {
-        return speciality;
-    }
+    public String getSpeciality() { return speciality; }
+    public void setSpeciality(String speciality) { this.speciality = speciality; }
 
-    public void setSpeciality(String speciality) {
-        this.speciality = speciality;
-    }
-
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public double getLon() {
-        return lon;
-    }
-
-    public void setLon(double lon) {
-        this.lon = lon;
-    }
+    public String getOriginZone() { return originZone; }
+    public void setOriginZone(String originZone) { this.originZone = originZone; }
 }
