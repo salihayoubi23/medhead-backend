@@ -21,8 +21,14 @@ public class HospitalService {
         this.objectMapper = objectMapper;
     }
 
+    // comportement normal de l'app : on charge hospitals.json
     public List<Hospital> loadHospitals() {
-        try (InputStream is = new ClassPathResource("hospitals.json").getInputStream()) {
+        return loadHospitalsFrom("hospitals.json");
+    }
+
+    // utile pour les tests : charger un autre fichier (ex: hospitals_no_beds.json)
+    public List<Hospital> loadHospitalsFrom(String resourceName) {
+        try (InputStream is = new ClassPathResource(resourceName).getInputStream()) {
             return objectMapper.readValue(is, new TypeReference<List<Hospital>>() {});
         } catch (IOException e) {
             e.printStackTrace();

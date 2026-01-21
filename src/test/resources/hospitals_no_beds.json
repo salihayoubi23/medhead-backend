@@ -1,0 +1,10 @@
+[
+  {
+    "id": "HOSP-100",
+    "name": "Test Hospital A",
+    "availableBeds": 0,
+    "specialities": ["Cardiologie"],
+    "lat": 51.50,
+    "lon": -0.12
+  }
+]
