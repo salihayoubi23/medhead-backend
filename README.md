@@ -93,13 +93,29 @@ En production, elle serait remplacée par un service de routage réel.
 
 ## Tests
 
-À venir :
-- tests unitaires
-- tests de charge (JMeter)
+Le projet inclut des **tests unitaires** et des **tests d’intégration légers**, adaptés au périmètre de la preuve de concept (PoC).
 
----
+### Objectifs
+- Valider la logique métier de calcul de distance (matrice simulée)
+- Valider la logique de recommandation d’hôpital
+- Vérifier le fonctionnement des endpoints REST principaux
 
-## CI/CD
+### Types de tests
 
-À venir :
+#### Tests unitaires
+- `DistanceMatrixService` : validation du calcul de distance simulée
+- Vérification des règles de sélection (spécialité, lits disponibles)
+
+#### Tests d’intégration
+- Tests des endpoints REST via le contrôleur de recommandations
+- Vérification des réponses HTTP et des messages retournés
+
+### Lancement des tests
+```bash
+./mvnw test
+
+#### CI/CD
+
+- À venir :
 - pipeline build + tests
+
