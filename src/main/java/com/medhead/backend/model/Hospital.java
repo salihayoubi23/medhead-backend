@@ -38,4 +38,14 @@ public class Hospital {
     public double getLon() {
         return lon;
     }
+    public void setAvailableBeds(int availableBeds) {
+        this.availableBeds = availableBeds;
+    }
+
+    public void setId(String id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setSpecialities(List<String> specialities) { this.specialities = specialities; }
+    public void setLat(double lat) { this.lat = lat; }
+    public void setLon(double lon) { this.lon = lon; }
+
 }

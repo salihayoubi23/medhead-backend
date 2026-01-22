@@ -2,8 +2,8 @@ package com.medhead.backend.service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -17,16 +17,35 @@ public class HospitalService {
 
     private final ObjectMapper objectMapper;
 
+    // état PoC en mémoire : hospitalId -> Hospital
+    private final Map<String, Hospital> store = new ConcurrentHashMap<>();
+
     public HospitalService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
+        // init au démarrage
+        List<Hospital> initial = loadHospitalsFrom("hospitals.json");
+        for (Hospital h : initial) {
+            store.put(h.getId(), h);
+        }
     }
 
-    // comportement normal de l'app : on charge hospitals.json
     public List<Hospital> loadHospitals() {
-        return loadHospitalsFrom("hospitals.json");
+        return new ArrayList<>(store.values());
     }
 
-    // utile pour les tests : charger un autre fichier (ex: hospitals_no_beds.json)
+    public Optional<Hospital> findById(String hospitalId) {
+        return Optional.ofNullable(store.get(hospitalId));
+    }
+
+    public synchronized Optional<Hospital> reserveOneBed(String hospitalId) {
+        Hospital h = store.get(hospitalId);
+        if (h == null) return Optional.empty();
+        if (h.getAvailableBeds() <= 0) return Optional.of(h); // pas de lit
+        h.setAvailableBeds(h.getAvailableBeds() - 1);
+        return Optional.of(h);
+    }
+
+    // utile pour tests/chargement
     public List<Hospital> loadHospitalsFrom(String resourceName) {
         try (InputStream is = new ClassPathResource(resourceName).getInputStream()) {
             return objectMapper.readValue(is, new TypeReference<List<Hospital>>() {});

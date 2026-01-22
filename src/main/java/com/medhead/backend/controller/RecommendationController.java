@@ -40,34 +40,51 @@ public class RecommendationController {
                 .toList();
 
         if (candidates.isEmpty()) {
-            return new RecommendationResponse(null,
-                    "No hospital found for speciality=" + request.getSpeciality() + " with available beds");
+            return new RecommendationResponse(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "No hospital found for speciality=" + request.getSpeciality() + " with available beds"
+            );
         }
 
-        // 2) filtrer ceux qui ont une distance définie pour la zone
+        // 2) garder uniquement ceux qui ont une distance définie pour la zone
         List<Hospital> withDistance = candidates.stream()
                 .filter(h -> distanceMatrixService.getDistance(request.getOriginZone(), h.getId()).isPresent())
                 .toList();
 
         if (withDistance.isEmpty()) {
-            return new RecommendationResponse(null,
-                    "No distance data for originZone=" + request.getOriginZone() + " (update distance_matrix.json)");
+            return new RecommendationResponse(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "No distance data for originZone=" + request.getOriginZone() + " (update distance_matrix.json)"
+            );
         }
 
         // 3) choisir le plus rapide (durationMin)
         Optional<Hospital> best = withDistance.stream()
                 .min(Comparator.comparingInt(h -> {
-                    DistanceEntry d = distanceMatrixService.getDistance(request.getOriginZone(), h.getId()).get();
+                    DistanceEntry d = distanceMatrixService.getDistance(request.getOriginZone(), h.getId()).orElseThrow();
                     return d.getDurationMin();
                 }));
 
-        Hospital chosen = best.get();
-        DistanceEntry d = distanceMatrixService.getDistance(request.getOriginZone(), chosen.getId()).get();
+        Hospital chosen = best.orElseThrow();
+        DistanceEntry d = distanceMatrixService.getDistance(request.getOriginZone(), chosen.getId()).orElseThrow();
+
+        double distanceKmRounded = Math.round(d.getDistanceKm() * 10.0) / 10.0;
 
         return new RecommendationResponse(
+                chosen.getId(),
                 chosen.getName(),
-                "Chosen by speciality + beds + routingDistanceMock. durationMin=" + d.getDurationMin()
-                        + ", distanceKm=" + String.format(java.util.Locale.US, "%.1f", d.getDistanceKm())
+                chosen.getAvailableBeds(),
+                distanceKmRounded,
+                d.getDurationMin(),
+                "Chosen by speciality + beds + routingDistanceMock"
         );
     }
 }
