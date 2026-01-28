@@ -2,6 +2,8 @@ package com.medhead.backend.controller;
 
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.medhead.backend.dto.ReservationRequest;
@@ -21,27 +23,38 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ReservationResponse reserve(@Valid @RequestBody ReservationRequest request) {
+    public ResponseEntity<ReservationResponse> reserve(@Valid @RequestBody ReservationRequest request) {
 
         Optional<Hospital> existing = hospitalService.findById(request.getHospitalId());
         if (existing.isEmpty()) {
-            return new ReservationResponse(request.getHospitalId(), null, 0,
-                    "Hospital not found");
+            ReservationResponse body = new ReservationResponse(
+                    request.getHospitalId(),
+                    null,
+                    0,
+                    "Hospital not found"
+            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
         }
 
         Hospital before = existing.get();
         if (before.getAvailableBeds() <= 0) {
-            return new ReservationResponse(before.getId(), before.getName(), 0,
-                    "No beds available (reservation refused)");
+            ReservationResponse body = new ReservationResponse(
+                    before.getId(),
+                    before.getName(),
+                    0,
+                    "No beds available (reservation refused)"
+            );
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
         }
 
-        Hospital updated = hospitalService.reserveOneBed(before.getId()).get();
+        Hospital updated = hospitalService.reserveOneBed(before.getId()).orElse(before);
 
-        return new ReservationResponse(
+        ReservationResponse body = new ReservationResponse(
                 updated.getId(),
                 updated.getName(),
                 updated.getAvailableBeds(),
                 "Reservation confirmed (1 bed reserved)"
         );
+        return ResponseEntity.ok(body);
     }
 }

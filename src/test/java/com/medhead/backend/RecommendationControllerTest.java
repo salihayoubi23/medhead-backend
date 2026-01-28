@@ -29,7 +29,7 @@ class RecommendationControllerTest {
                 .content(body))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.hospitalName", notNullValue()))
-            .andExpect(jsonPath("$.reason", containsString("Chosen")));
+            .andExpect(jsonPath("$.reason", containsString("Choisi")));
     }
 
     @Test
@@ -43,14 +43,12 @@ class RecommendationControllerTest {
                 .content(body))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.hospitalName", nullValue()))
-            .andExpect(jsonPath("$.reason", containsString("No distance data")));
+            .andExpect(jsonPath("$.reason", containsString("Zone inconnue")));
     }
 
     @Test
     void shouldReturnClearMessageWhenNoBedsAvailable() throws Exception {
-        // On teste un cas où aucune reco n'est possible.
-        // Choisis une spécialité qui existe MAIS mets tous les lits à 0 dans hospitals.json,
-        // OU utilise une spécialité inexistante.
+        // Cas où aucune reco n'est possible : spécialité inexistante
         String body = """
             {"speciality":"SPECIALITE_INEXISTANTE","originZone":"LONDON_CENTRAL"}
         """;

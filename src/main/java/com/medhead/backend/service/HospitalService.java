@@ -1,57 +1,45 @@
 package com.medhead.backend.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.Optional;
 
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medhead.backend.model.Hospital;
+import com.medhead.backend.repository.HospitalRepository;
 
 @Service
 public class HospitalService {
 
-    private final ObjectMapper objectMapper;
+    private final HospitalRepository hospitalRepository;
 
-    // état PoC en mémoire : hospitalId -> Hospital
-    private final Map<String, Hospital> store = new ConcurrentHashMap<>();
-
-    public HospitalService(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-        // init au démarrage
-        List<Hospital> initial = loadHospitalsFrom("hospitals.json");
-        for (Hospital h : initial) {
-            store.put(h.getId(), h);
-        }
+    public HospitalService(HospitalRepository hospitalRepository) {
+        this.hospitalRepository = hospitalRepository;
     }
 
-    public List<Hospital> loadHospitals() {
-        return new ArrayList<>(store.values());
+    @Transactional(readOnly = true)
+    public List<Hospital> findAll() {
+        return (List<Hospital>) hospitalRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Optional<Hospital> findById(String hospitalId) {
-        return Optional.ofNullable(store.get(hospitalId));
+        return hospitalRepository.findById(hospitalId);
     }
 
-    public synchronized Optional<Hospital> reserveOneBed(String hospitalId) {
-        Hospital h = store.get(hospitalId);
-        if (h == null) return Optional.empty();
-        if (h.getAvailableBeds() <= 0) return Optional.of(h); // pas de lit
-        h.setAvailableBeds(h.getAvailableBeds() - 1);
-        return Optional.of(h);
-    }
+    @Transactional
+    public Optional<Hospital> reserveOneBed(String hospitalId) {
+        Optional<Hospital> opt = hospitalRepository.findById(hospitalId);
+        if (opt.isEmpty()) return Optional.empty();
 
-    // utile pour tests/chargement
-    public List<Hospital> loadHospitalsFrom(String resourceName) {
-        try (InputStream is = new ClassPathResource(resourceName).getInputStream()) {
-            return objectMapper.readValue(is, new TypeReference<List<Hospital>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Collections.emptyList();
+        Hospital h = opt.get();
+        if (h.getAvailableBeds() <= 0) {
+            return Optional.of(h); // rien à réserver
         }
+
+        h.setAvailableBeds(h.getAvailableBeds() - 1);
+        Hospital saved = hospitalRepository.save(h);
+        return Optional.of(saved);
     }
 }
